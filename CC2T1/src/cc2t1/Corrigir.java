@@ -17,7 +17,7 @@ public class Corrigir {
 
     // Especifique o caminho dos casos de teste.
     // Deve haver dois subdiretorios: entrada e saida
-    private final static String CAMINHO_CASOS_TESTE = "/Users/andrecamargorocha/Documents/UFSCar/Compiladores II/CC2T1/casosDeTesteT1/1.arquivos_com_erros_sintaticos";
+    private final static String CAMINHO_CASOS_TESTE = "~/compiladores2/CC2T1/casosDeTesteT1/1.arquivos_com_erros_sintaticos";
     
     // As flags GERA e VERIFICA são de uso do professor
     // GERA = true significa que a saída vai ser gerada, sobrescrevendo qualquer
