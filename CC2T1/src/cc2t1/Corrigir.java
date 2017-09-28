@@ -47,13 +47,14 @@ public class Corrigir {
 
             SaidaParser out = new SaidaParser();
             
-            //TabelaDeSimbolos.limparTabela();
+            
+
+            ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(casoTeste));
+            LALexer lexer = new LALexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            LAParser parser = new LAParser(tokens);
+            parser.addErrorListener(new T1ErrorListener(out));
             try {
-                ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(casoTeste));
-                LALexer lexer = new LALexer(input);
-                CommonTokenStream tokens = new CommonTokenStream(lexer);
-                LAParser parser = new LAParser(tokens);
-                parser.addErrorListener(new T1ErrorListener(out));
                 parser.programa();
              } catch (ParseCancellationException pce) {
                 if (pce.getMessage() != null) {
