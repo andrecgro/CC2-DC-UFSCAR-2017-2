@@ -80,7 +80,7 @@ mais_selecao: (selecao)?;
 
 constantes: numero_intervalo mais_constantes;
 
-mais_constantes: ',' (constantes)?;
+mais_constantes: (',' constantes)?;
 
 numero_intervalo: op_unario NUM_INT intervalo_opcional;
 
@@ -132,9 +132,11 @@ fator_logico: op_nao parcela_logica;
 
 parcela_logica: 'verdadeiro' | 'falso' | exp_relacional;
 
-COMENTARIO: '{' ~('}')* '}' {skip();};
-
 WS:	(' ' | '\t' | '\r' | '\n') {skip();};
+
+COMENTARIO: '{' ~('\r'|'\n' |'}')* '}' {skip();};
+
+COMENTARIO_ABERTO: '{' ~('\r'|'\n' |'}')* { throw new ParseCancellationException("Linha "+getLine()+": comentario nao fechado");};
 
 IDENT:  ( 'a'..'z' | '_' | 'A'..'Z') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')* ;
 
