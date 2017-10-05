@@ -1,5 +1,11 @@
 grammar LA;
 
+@members{
+    private void corte(String string){
+        throw new ParseCancellationException(string);
+    }
+}
+
 programa: declaracoes 'algoritmo' corpo 'fim_algoritmo' ;
 
 declaracoes: (decl_local_global declaracoes)? ;
@@ -56,15 +62,15 @@ corpo: declaracoes_locais comandos;
 comandos: (cmd comandos)?;
 
 cmd: 'leia' '(' identificador mais_ident ')'
- | 'escreva' '(' expressao mais_expressao ')'
- | 'se' expressao 'entao' comandos senao_opcional 'fim_se'
- | 'caso' exp_aritmetica 'seja' selecao senao_opcional 'fim_caso'
- | 'para' IDENT '<-' exp_aritmetica 'ate' exp_aritmetica 'faca' comandos 'fim_para'
- | 'enquanto' expressao 'faca' comandos 'fim_enquanto'
- | 'faca' comandos 'ate' expressao
- | '^' IDENT outros_ident dimensao '<-' expressao
+ | 'escreva' '(' exp_escreva=expressao mais_expressao ')'
+ | 'se' exp_se=expressao 'entao' comandos senao_se=senao_opcional 'fim_se'
+ | 'caso' exp_a_caso=exp_aritmetica 'seja' selecao senao_caso=senao_opcional 'fim_caso'
+ | 'para' IDENT '<-' exp_a_para=exp_aritmetica 'ate' exp_a_ate=exp_aritmetica 'faca' comandos 'fim_para'
+ | 'enquanto' exp_enquanto=expressao 'faca' comandos 'fim_enquanto'
+ | 'faca' comandos 'ate' exp_faca=expressao
+ | '^' IDENT outros_ident dimensao '<-' exp_dimen=expressao
  | IDENT chamada_atribuicao
- | 'retorne' expressao;
+ | 'retorne' exp_retorne=expressao;
 
 mais_expressao: (',' expressao mais_expressao)?;
 
@@ -136,7 +142,7 @@ WS:	(' ' | '\t' | '\r' | '\n') {skip();};
 
 COMENTARIO: '{' ~('\r'|'\n' |'}')* '}' {skip();};
 
-COMENTARIO_ABERTO: '{' ~('\r'|'\n' |'}')* { throw new ParseCancellationException("Linha "+getLine()+": comentario nao fechado");};
+COMENTARIO_ABERTO: '{' ~('\r'|'\n' |'}')* { corte("Linha "+getLine()+": comentario nao fechado");};
 
 IDENT:  ( 'a'..'z' | '_' | 'A'..'Z') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')* ;
 
@@ -146,4 +152,4 @@ NUM_REAL: NUM_INT '.' NUM_INT ;
 
 CADEIA: '"' ~('\n')* '"';
 
-ERROR: . { throw new ParseCancellationException("Linha "+getLine()+": "+getText()+" - simbolo nao identificado"); };
+ERROR: . { corte("Linha "+getLine()+": "+getText()+" - simbolo nao identificado"); };
