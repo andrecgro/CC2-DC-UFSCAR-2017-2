@@ -1,4 +1,4 @@
-grammar LA;
+ grammar LA;
 
 @members{
     private void corte(String string){
@@ -20,7 +20,7 @@ variavel: IDENT dimensao mais_var ':' tipo;
 
 mais_var: (',' IDENT dimensao mais_var)?;
 
-identificador: ponteiros_opcionais IDENT dimensao outros_ident;
+identificador returns [String tipo]: ponteiros_opcionais IDENT dimensao outros_ident;
 
 ponteiros_opcionais: ('^' ponteiros_opcionais)?;
 

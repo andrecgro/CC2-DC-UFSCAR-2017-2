@@ -13,7 +13,6 @@ import java.util.ArrayList;
  */
 public class Gerador extends LABaseVisitor <String>{
     String saidaCodigo = "";
-    ArrayList <ListaTipoIdentificadores> listaIdent = new ArrayList();
     
     @Override
     public String visitPrograma(LAParser.ProgramaContext ctx) {
@@ -23,11 +22,14 @@ public class Gerador extends LABaseVisitor <String>{
                         "#include <stdlib.h>\n" +
                         "#include <stdbool.h>\n" + //adicionando biblioteca para valores booleanos (a partir de C99)
                         "\n";
-        saidaCodigo +=  "int main() {";
         
         //segue fluxo de acordo com regra gramatical
         visitDeclaracoes(ctx.declaracoes());
+        
+        saidaCodigo +=  "\nint main() {";
         visitCorpo(ctx.corpo());
+        
+        
         
         //padrão para todo fim de programa
         
@@ -122,9 +124,6 @@ public class Gerador extends LABaseVisitor <String>{
     
     @Override
     public String visitVariavel(LAParser.VariavelContext ctx) {
-        ListaTipoIdentificadores var;
-        var = new ListaTipoIdentificadores(ctx.IDENT().getText(), ctx.tipo().getText());
-        listaIdent.add(var);
         saidaCodigo +=  "\n" +visitTipo(ctx.tipo()) + " ";
         saidaCodigo += ctx.IDENT().getText();
         visitDimensao(ctx.dimensao());
