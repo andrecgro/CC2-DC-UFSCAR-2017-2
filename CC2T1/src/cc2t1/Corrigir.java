@@ -16,8 +16,9 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 public class Corrigir {
 
     // Especifique o caminho dos casos de teste.
-    private final static String CAMINHO_CASOS_TESTE = "/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/casosDeTesteT1/1.arquivos_com_erros_sintaticos";
-
+    //private final static String CAMINHO_CASOS_TESTE = "/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/casosDeTesteT1/1.arquivos_com_erros_sintaticos";
+    private final static String CAMINHO_CASOS_TESTE = "/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/casosDeTesteT1/3.arquivos_sem_erros";
+    
      
     public static void main(String[] args) throws IOException, RecognitionException {
         File diretorioCasosTeste = null;
@@ -54,8 +55,11 @@ public class Corrigir {
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             LAParser parser = new LAParser(tokens);
             parser.addErrorListener(new T1ErrorListener(out));
+            
+            LAParser.ProgramaContext arvore = null;
+            
             try {
-                parser.programa();
+                arvore = parser.programa();
              } catch (ParseCancellationException pce) {
                 if (pce.getMessage() != null) {
                    out.println(pce.getMessage());
@@ -64,8 +68,9 @@ public class Corrigir {
 
             if (!out.isModificado()) {
                 //casos sem erro : Gerar còdigo C
-                out.println("Fim da analise. Sem erros sintaticos.");
-                out.println("Tabela de simbolos:");
+                Gerador ger = new Gerador();
+                System.out.println(casoTeste.getName());
+                ger.visitPrograma(arvore);
 
                 //TabelaDeSimbolos.imprimirTabela(out);
                 System.err.print(out);

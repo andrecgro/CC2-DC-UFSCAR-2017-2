@@ -100,6 +100,11 @@ public class LALexer extends Lexer {
 	}
 
 
+	    private void corte(String string){
+	        throw new ParseCancellationException(string);
+	    }
+
+
 	public LALexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -157,15 +162,15 @@ public class LALexer extends Lexer {
 	private void COMENTARIO_ABERTO_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 2:
-			 throw new ParseCancellationException("Linha "+getLine()+": comentario nao fechado");
-			//break;
+			 corte("Linha "+getLine()+": comentario nao fechado");
+			break;
 		}
 	}
 	private void ERROR_action(RuleContext _localctx, int actionIndex) {
 		switch (actionIndex) {
 		case 3:
-			 throw new ParseCancellationException("Linha "+getLine()+": "+getText()+" - simbolo nao identificado"); 
-			//break;
+			 corte("Linha "+getLine()+": "+getText()+" - simbolo nao identificado"); 
+			break;
 		}
 	}
 
