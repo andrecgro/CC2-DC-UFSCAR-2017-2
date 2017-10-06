@@ -133,6 +133,27 @@ public class Gerador extends LABaseVisitor <String>{
     }
 
     @Override
+    public String visitMais_expressao(LAParser.Mais_expressaoContext ctx) {
+        if(ctx.getText() == null || ctx.getText() == ""){
+            return null;
+        }
+        visitExpressao(ctx.expressao());
+        visitMais_expressao(ctx.mais_expressao());
+        return "";
+    }
+
+    @Override
+    public String visitSenao_opcional(LAParser.Senao_opcionalContext ctx) {
+        if(ctx.getText() == null || ctx.getText() == ""){
+            return null;
+        }
+        saidaCodigo += "\nelse{" + visitComandos(ctx.comandos()) + "\n}";
+        return "";
+    }
+    
+
+    
+    @Override
     public String visitMais_var(LAParser.Mais_varContext ctx) {
         if( ctx == null || ctx.getText() == "" ){
          return null;
