@@ -16,9 +16,9 @@ declaracao_local: 'declare' variavel
  | 'constante' IDENT ':' tipo_basico '=' valor_constante
  | tipo IDENT ':' tipo ;
 
-variavel: IDENT dimensao mais_var ':' tipo;
+variavel: IDENT dimensao (mais_var)? ':' tipo;
 
-mais_var: (',' IDENT dimensao mais_var)?;
+mais_var: ',' IDENT dimensao (mais_var)?;
 
 identificador: ponteiros_opcionais IDENT dimensao outros_ident;
 
@@ -30,7 +30,7 @@ dimensao: ('[' exp_aritmetica ']' dimensao)?;
 
 tipo: registro | tipo_estendido;
 
-mais_ident: (',' identificador mais_ident)?;
+mais_ident: ',' identificador (mais_ident)?;
 
 mais_variaveis: (variavel mais_variaveis)?;
 
@@ -49,7 +49,7 @@ declaracao_global: 'procedimento' IDENT '(' parametros_opcional ')' declaracoes_
 
 parametros_opcional: (parametro)?;
 
-parametro: var_opcional identificador mais_ident ':' tipo_estendido mais_parametros;
+parametro: var_opcional identificador (mais_ident)? ':' tipo_estendido mais_parametros;
 
 var_opcional: ('var')?;
 
@@ -61,7 +61,7 @@ corpo: declaracoes_locais comandos;
 
 comandos: (cmd comandos)?;
 
-cmd: 'leia' '(' identificador mais_ident ')'
+cmd: 'leia' '(' identificador (mais_ident)? ')'
  | 'escreva' '(' exp_escreva=expressao mais_expressao ')'
  | 'se' exp_se=expressao 'entao' comandos senao_se=senao_opcional 'fim_se'
  | 'caso' exp_a_caso=exp_aritmetica 'seja' selecao senao_caso=senao_opcional 'fim_caso'

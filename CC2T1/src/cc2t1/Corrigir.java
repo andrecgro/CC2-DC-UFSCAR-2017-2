@@ -70,9 +70,14 @@ public class Corrigir {
                 //casos sem erro : Gerar còdigo C
                 Gerador ger = new Gerador();
                 System.out.println(casoTeste.getName());
-                ger.visitPrograma(arvore);
+                String codigo = ger.visitPrograma(arvore);
 
-                //TabelaDeSimbolos.imprimirTabela(out);
+                if(arqUnico){
+                    PrintWriter writer = new PrintWriter(arquivoSaida, "UTF-8");
+                    writer.print(codigo);
+                    writer.close();
+                    arqUnico = false;
+                }
                 System.err.print(out);
             } else {
                 out.println("Fim da compilacao");

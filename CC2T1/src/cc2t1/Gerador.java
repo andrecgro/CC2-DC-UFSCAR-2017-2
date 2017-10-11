@@ -39,7 +39,7 @@ public class Gerador extends LABaseVisitor <String>{
                         "}";
         
         System.out.println(saidaCodigo+"\n\n");
-        return "";
+        return saidaCodigo;
     }
 
     @Override
@@ -172,7 +172,15 @@ public class Gerador extends LABaseVisitor <String>{
         TipoIdentificadores var;
         var = new TipoIdentificadores(ctx.IDENT().getText(), ctx.tipo().getText());
         listaIdent.add(var);
-        saidaCodigo +=  "\n" +visitTipo(ctx.tipo()) + " ";
+        LAParser.Mais_varContext ctx_mv = ctx.mais_var();
+        while(ctx_mv != null){
+            var = new TipoIdentificadores(ctx_mv.IDENT().getText(), ctx.tipo().getText());
+            listaIdent.add(var);
+            ctx_mv = ctx_mv.mais_var();
+        }
+        saidaCodigo +=  "\n";
+        visitTipo(ctx.tipo());
+        saidaCodigo += " ";
         saidaCodigo += ctx.IDENT().getText();
         visitDimensao(ctx.dimensao());
         visitMais_var(ctx.mais_var());
@@ -217,7 +225,9 @@ public class Gerador extends LABaseVisitor <String>{
         if( ctx == null || "".equals(ctx.getText()) ){
          return null;
         }
-        saidaCodigo += "[" + visitExp_aritmetica(ctx.exp_aritmetica()) + "]";
+        saidaCodigo += "[";
+        visitExp_aritmetica(ctx.exp_aritmetica());
+        saidaCodigo += "]";
         return "";
     }
     
@@ -359,10 +369,51 @@ public class Gerador extends LABaseVisitor <String>{
     @Override
     public String visitCmd(LAParser.CmdContext ctx) {
         if ( ctx.identificador() != null ){//árvore na regra 'leia'
-            saidaCodigo += "\nscanf(%s, &";
+            TipoIdentificadores var = new TipoIdentificadores();
+            for(TipoIdentificadores ti : listaIdent){
+                if(ti.getIdentificador().equals(ctx.identificador().IDENT().getText())){
+                    var = ti;
+                }
+            }
+            if(var.getTipo().equals("inteiro")){
+             saidaCodigo += "\nscanf(\"%d\", &";
+            }
+            else if(var.getTipo().equals("literal")){
+             saidaCodigo += "\ngets(";
+            }
+            else if(var.getTipo().equals("real")){
+             saidaCodigo += "\nscanf(\"%f\", &";
+            }
             visitIdentificador(ctx.identificador());
-            visitMais_ident(ctx.mais_ident());
             saidaCodigo += ");";
+            
+            LAParser.Mais_identContext ctx_mi = ctx.mais_ident();
+            while(ctx_mi != null){
+                System.out.println(">" + ctx_mi.identificador().IDENT().getText());
+                for(TipoIdentificadores ti : listaIdent){
+                    if(ti.getIdentificador().equals(ctx_mi.identificador().IDENT().getText())){
+                        var = ti;
+                    }
+                }
+                
+               if(var.getTipo().equals("inteiro")){
+                saidaCodigo += "\nscanf(\"%d\", &";
+               }
+               else if(var.getTipo().equals("literal")){
+                saidaCodigo += "\ngets(";
+               }
+               else if(var.getTipo().equals("real")){
+                saidaCodigo += "\nscanf(\"%f\", &";
+               }
+               visitIdentificador(ctx.identificador());
+               if(ctx.mais_ident()!=null)
+                   visitMais_ident(ctx.mais_ident());
+               saidaCodigo += ");";
+               
+               ctx_mi = ctx_mi.mais_ident();
+            }
+            
+            
             return null;
         }
         if (ctx.exp_escreva != null ){//árvore na regra 'escreva'
@@ -434,8 +485,17 @@ public class Gerador extends LABaseVisitor <String>{
 
     @Override
     public String visitChamada_atribuicao(LAParser.Chamada_atribuicaoContext ctx) {
-        if(ctx.argumentos_opcional() != null){ // árvore na regra outros_ident
-            
+        if(ctx.argumentos_opcional() != null){ // árvore na regra argumentos_opcional
+            saidaCodigo += "(";
+            visitArgumentos_opcional(ctx.argumentos_opcional());
+            saidaCodigo += ");";
+        }
+        else{// árvore na regra outros_ident
+            visitOutros_ident(ctx.outros_ident());
+            visitDimensao(ctx.dimensao());
+            saidaCodigo += " =";
+            visitExpressao(ctx.expressao());
+            saidaCodigo += ";";
         }
         return ""; 
     }
