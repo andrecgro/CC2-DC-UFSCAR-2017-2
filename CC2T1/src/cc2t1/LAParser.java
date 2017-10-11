@@ -1224,6 +1224,8 @@ public class LAParser extends Parser {
 	}
 
 	public static class Declaracao_globalContext extends ParserRuleContext {
+		public ComandosContext comando_proc;
+		public ComandosContext comando_func;
 		public TerminalNode IDENT() { return getToken(LAParser.IDENT, 0); }
 		public Parametros_opcionalContext parametros_opcional() {
 			return getRuleContext(Parametros_opcionalContext.class,0);
@@ -1279,7 +1281,7 @@ public class LAParser extends Parser {
 				setState(219);
 				declaracoes_locais();
 				setState(220);
-				comandos();
+				((Declaracao_globalContext)_localctx).comando_proc = comandos();
 				setState(221);
 				match(T__22);
 				}
@@ -1304,7 +1306,7 @@ public class LAParser extends Parser {
 				setState(230);
 				declaracoes_locais();
 				setState(231);
-				comandos();
+				((Declaracao_globalContext)_localctx).comando_func = comandos();
 				setState(232);
 				match(T__24);
 				}

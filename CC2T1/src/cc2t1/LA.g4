@@ -20,7 +20,7 @@ variavel: IDENT dimensao mais_var ':' tipo;
 
 mais_var: (',' IDENT dimensao mais_var)?;
 
-identificador returns [String tipo]: ponteiros_opcionais IDENT dimensao outros_ident;
+identificador: ponteiros_opcionais IDENT dimensao outros_ident;
 
 ponteiros_opcionais: ('^' ponteiros_opcionais)?;
 
@@ -44,8 +44,8 @@ valor_constante: CADEIA | NUM_INT | NUM_REAL | 'verdadeiro' | 'falso';
 
 registro: 'registro' variavel mais_variaveis 'fim_registro';
 
-declaracao_global: 'procedimento' IDENT '(' parametros_opcional ')' declaracoes_locais comandos 'fim_procedimento'
- | 'funcao' IDENT '(' parametros_opcional ')' ':' tipo_estendido declaracoes_locais comandos 'fim_funcao';
+declaracao_global: 'procedimento' IDENT '(' parametros_opcional ')' declaracoes_locais comando_proc=comandos 'fim_procedimento'
+ | 'funcao' IDENT '(' parametros_opcional ')' ':' tipo_estendido declaracoes_locais comando_func=comandos 'fim_funcao';
 
 parametros_opcional: (parametro)?;
 

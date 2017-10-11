@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class Gerador extends LABaseVisitor <String>{
     String saidaCodigo = "";
+    ArrayList <TipoIdentificadores> listaIdent = new ArrayList();
+
     
     @Override
     public String visitPrograma(LAParser.ProgramaContext ctx) {
@@ -25,7 +27,6 @@ public class Gerador extends LABaseVisitor <String>{
         
         //segue fluxo de acordo com regra gramatical
         visitDeclaracoes(ctx.declaracoes());
-        
         saidaCodigo +=  "\nint main() {";
         visitCorpo(ctx.corpo());
         
@@ -68,6 +69,9 @@ public class Gerador extends LABaseVisitor <String>{
             return null;
         }
         if (ctx.valor_constante()!= null){//árvore na regra 'constante'
+            TipoIdentificadores constante;
+            constante = new TipoIdentificadores(ctx.IDENT().getText(), ctx.tipo_basico().getText());
+            listaIdent.add(constante);
             saidaCodigo += "\n#define " + ctx.IDENT() + " ";
             visitValor_constante(ctx.valor_constante());
             return null;
@@ -82,12 +86,33 @@ public class Gerador extends LABaseVisitor <String>{
         return "";
     }
 
+    @Override
+    public String visitDeclaracao_global(LAParser.Declaracao_globalContext ctx) {
+        if(ctx.comando_proc.getText() != ""){ // regra de procedimento
+            saidaCodigo += "\nvoid " + ctx.IDENT().getText() + " (";
+            visitParametros_opcional(ctx.parametros_opcional());
+            saidaCodigo +=  "){";
+            visitDeclaracoes_locais(ctx.declaracoes_locais());
+            visitComandos(ctx.comandos());
+            saidaCodigo += "}";
+            //deletar a lista
+        }
+        else if (ctx.comando_func.getText() != ""){
+            saidaCodigo += "\n" + ctx.tipo_estendido().getText() + " " +  ctx.IDENT().getText() + " (";
+            visitParametros_opcional(ctx.parametros_opcional());
+            saidaCodigo += "){ ";
+            visitDeclaracoes_locais(ctx.declaracoes_locais());
+            visitComandos(ctx.comandos());
+            saidaCodigo += "\n}";
+            //deletar a lista
+        }
+        return "";
+    }
     
-    
-    
+
     @Override
     public String visitRegistro(LAParser.RegistroContext ctx) {// struct
-        saidaCodigo += "struct{";
+        saidaCodigo += "\nstruct{";
         visitVariavel(ctx.variavel());
         visitMais_variaveis(ctx.mais_variaveis());
         saidaCodigo += "\n} "+ ctx.variavel().IDENT();
@@ -124,6 +149,9 @@ public class Gerador extends LABaseVisitor <String>{
     
     @Override
     public String visitVariavel(LAParser.VariavelContext ctx) {
+        TipoIdentificadores var;
+        var = new TipoIdentificadores(ctx.IDENT().getText(), ctx.tipo().getText());
+        listaIdent.add(var);
         saidaCodigo +=  "\n" +visitTipo(ctx.tipo()) + " ";
         saidaCodigo += ctx.IDENT().getText();
         visitDimensao(ctx.dimensao());
@@ -351,7 +379,7 @@ public class Gerador extends LABaseVisitor <String>{
             return null;
         }
         if (ctx.exp_faca != null ){//árvore na regra 'faca'
-            saidaCodigo += "do{";
+            saidaCodigo += "\ndo{";
             saidaCodigo += "\n" + visitComandos(ctx.comandos());
             saidaCodigo += "\n}";
             saidaCodigo += "\nwhile(" + visitExpressao(ctx.expressao()) + ");";
@@ -370,7 +398,7 @@ public class Gerador extends LABaseVisitor <String>{
             return null;
         }
         if (ctx.exp_retorne != null){//árvore na regra 'retorne'
-            saidaCodigo += "\nreturn" + visitExpressao(ctx.expressao());
+            saidaCodigo += "\nreturn " + visitExpressao(ctx.expressao());
             return null;
         }
         return ""; //To change body of generated methods, choose Tools | Templates.
