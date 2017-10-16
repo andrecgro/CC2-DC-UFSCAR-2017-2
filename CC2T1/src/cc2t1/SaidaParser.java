@@ -12,16 +12,30 @@ package cc2t1;
 public class SaidaParser {
     StringBuffer conteudo;
     boolean modificado;
+    int tipo;
 
-    public SaidaParser() {
+    public SaidaParser(int t) {
         conteudo = new StringBuffer();
-        modificado = false;
+        tipo = t;
+        if(tipo == 0)
+            modificado = false;
     }
 
     public void println(String texto) {
-        if(!modificado) modificado = true;
-        conteudo.append(texto);
-        conteudo.append("\n");
+        if(tipo == 0){
+            if(!modificado){
+                modificado = true;
+                conteudo.append(texto);
+                conteudo.append("\n");
+            }
+        }else {
+            conteudo.append(texto);
+            conteudo.append("\n");
+        }
+    }
+    
+    public void close(){
+        conteudo.append("Fim da compilacao\n");
     }
     
     public boolean isModificado() {

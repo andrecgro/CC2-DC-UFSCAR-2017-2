@@ -11,5 +11,40 @@ package cc2t1;
  */
 public class EntradaTabelaDeSimbolos {
     public String nome;
-    public TipoVariavel tipo;
+    public String tipo;
+    public TabelaDeSimbolos ts;
+    
+    public EntradaTabelaDeSimbolos(String nome, String tipo) {
+        this.nome = nome;
+        this.tipo = tipo;
+        this.ts = null;
+    }
+    
+    //para registros
+    public EntradaTabelaDeSimbolos(String nome, String tipo, TabelaDeSimbolos ts) {
+        this.nome = nome;
+        this.tipo = tipo;
+        this.ts = ts;
+    }
+    
+    
+    public String getNome() {
+        return nome;
+    }
+    
+    public String getTipo() {
+        return tipo;
+    }
+
+    public TabelaDeSimbolos getTs() {
+        return ts;
+    }
+    
+    @Override
+    public String toString() {
+        if(getTs() != null)
+            return nome+"("+tipo+")"+ts.toString();
+        return nome+"("+tipo+")";
+    }
+    
 }

@@ -14,35 +14,92 @@ import java.util.List;
  */
 public class TabelaDeSimbolos {
     private List<EntradaTabelaDeSimbolos> tabelaDeSimbolos;
+    private String escopo;
     
-    public TabelaDeSimbolos(){
+    public TabelaDeSimbolos(String escopo){
         tabelaDeSimbolos = new ArrayList<>();
+        this.escopo = escopo;
     }
     
-    public int instalarNome(String nome, TipoVariavel tipo){
-        if (jaFoiDeclarado(nome)){
-            throw new RuntimeException("Erro semântico: Variável "+nome+" foi declarada duas vezes ");
+    
+    public void adicionarSimbolo(String nome, String tipo) {
+        tabelaDeSimbolos.add(new EntradaTabelaDeSimbolos(nome,tipo));
+    }
+    
+    //para registro
+    public void adicionarSimbolo(String nome, String tipo, TabelaDeSimbolos ts) {
+        tabelaDeSimbolos.add(new EntradaTabelaDeSimbolos(nome,tipo,ts));
+    }
+    
+    public void adicionarSimbolo(String nome, String tipo, String escopo){
+        for(EntradaTabelaDeSimbolos etds:tabelaDeSimbolos) {
+            if(etds.getNome().equals(escopo)){
+                etds.getTs().adicionarSimbolo(nome, tipo);
+            }
         }
-        EntradaTabelaDeSimbolos etds = new EntradaTabelaDeSimbolos();
-        etds.nome = nome;
-        etds.tipo = tipo;
-        tabelaDeSimbolos.add(etds);
-        return tabelaDeSimbolos.size()-1;
     }
     
-    public TipoVariavel determinaTipo (String nome){
+    public void adicionarSimbolos(List<String> nomes, String tipo) {
+        for(String s:nomes) {
+            tabelaDeSimbolos.add(new EntradaTabelaDeSimbolos(s, tipo));
+        }
+    }
+    
+    
+    
+    public String getTipo (String nome){
         for (EntradaTabelaDeSimbolos etds:tabelaDeSimbolos){
             if (etds.nome.equals(nome))
                 return etds.tipo;
         }
         return null;
     }
+    
+    public String getTipo(String nomeVar, String escopo) {
+        for(EntradaTabelaDeSimbolos etds:tabelaDeSimbolos){
+            if(etds.getTs() != null && etds.getNome().equals(escopo)){
+                return etds.getTs().getTipo(nomeVar);
+            }
+        }
+        return null;
+    }
 
-    private boolean jaFoiDeclarado(String nome) {
+    public boolean existeSimbolo(String nome) {
         for (EntradaTabelaDeSimbolos etds:tabelaDeSimbolos){
             if (etds.nome.equals(nome))
                 return true;
         }
         return false;
     }
+    
+    public boolean existeSimbolo(String nome, String escopo) {
+        for(EntradaTabelaDeSimbolos etds:tabelaDeSimbolos) {
+            if(etds.getTipo().equals("registro")){
+                if(etds.getTs().escopo.equals(escopo) && etds.getTs().existeSimbolo(nome)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public ArrayList<String> getSimbolos(String escopo){
+        ArrayList<String> nomes = new ArrayList<String>();
+        for(EntradaTabelaDeSimbolos etds:tabelaDeSimbolos){
+            if(etds.getTs() != null && etds.getNome().equals(escopo)){
+                return etds.getTs().getSimbolos();
+            }
+        }
+        return null;
+    }
+    
+    
+    public ArrayList<String> getSimbolos(){
+        ArrayList<String> nomes = new ArrayList<String>();
+        for(EntradaTabelaDeSimbolos etds:tabelaDeSimbolos){
+            nomes.add(etds.getNome());
+        }
+        return nomes;
+    }
+    
 }

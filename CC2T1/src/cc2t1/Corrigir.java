@@ -16,8 +16,9 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 public class Corrigir {
 
     // Especifique o caminho dos casos de teste.
+
     // Deve haver dois subdiretorios: entrada e saida
-    private final static String CAMINHO_CASOS_TESTE = "~/compiladores2/CC2T1/casosDeTesteT1/1.arquivos_com_erros_sintaticos";
+    private final static String CAMINHO_CASOS_TESTE = "/home/pegurin/compiladores2/CC2-DC-UFSCAR-2017-2/CC2T1/casosDeTesteT1/2.arquivos_com_erros_semanticos";
     
     // As flags GERA e VERIFICA são de uso do professor
     // GERA = true significa que a saída vai ser gerada, sobrescrevendo qualquer
@@ -33,6 +34,7 @@ public class Corrigir {
     // Obs: este é o mesmo método que será usado pelo professor na correção
     // A nota que você obtiver aqui será usada no cálculo de sua nota do trabalho
     
+     
     public static void main(String[] args) throws IOException, RecognitionException {
         File diretorioCasosTeste = null;
         File[] casosTeste = null;
@@ -59,26 +61,41 @@ public class Corrigir {
         
         for (File casoTeste : casosTeste) {
 
-            SaidaParser out = new SaidaParser();
+            SaidaParser out = new SaidaParser(0);
+            SaidaParser outSemantico = new SaidaParser(1);
             
-            //TabelaDeSimbolos.limparTabela();
+            
+
+            ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(casoTeste));
+            LALexer lexer = new LALexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            LAParser parser = new LAParser(tokens);
+            parser.addErrorListener(new T1ErrorListener(out));
+            
+            LAParser.ProgramaContext arvore = null;
+            
             try {
-                ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(casoTeste));
-                LALexer lexer = new LALexer(input);
-                CommonTokenStream tokens = new CommonTokenStream(lexer);
-                LAParser parser = new LAParser(tokens);
-                parser.addErrorListener(new T1ErrorListener(out));
-                parser.programa();
+                arvore = parser.programa();
+                
+                if (out.toString().isEmpty()){
+                    AnalisadorSemantico as = new AnalisadorSemantico(outSemantico);
+                    as.visitPrograma(arvore);
+                }
+                
              } catch (ParseCancellationException pce) {
                 if (pce.getMessage() != null) {
                    out.println(pce.getMessage());
                 }
              }
+            
+            String errors = out.toString() + outSemantico.toString();
 
-            if (!out.isModificado()) {
+            //if (!out.isModificado()) {
+            if (errors.isEmpty()) {
                 //casos sem erro : Gerar còdigo C
-                out.println("Fim da analise. Sem erros sintaticos.");
-                out.println("Tabela de simbolos:");
+                Gerador ger = new Gerador();
+                System.out.println(casoTeste.getName());
+                ger.visitPrograma(arvore);
 
                 //TabelaDeSimbolos.imprimirTabela(out);
                 System.err.print(out);
