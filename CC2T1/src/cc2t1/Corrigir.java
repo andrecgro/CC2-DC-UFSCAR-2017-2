@@ -16,8 +16,23 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 public class Corrigir {
 
     // Especifique o caminho dos casos de teste.
-    //private final static String CAMINHO_CASOS_TESTE = "/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/casosDeTesteT1/1.arquivos_com_erros_sintaticos";
-    private final static String CAMINHO_CASOS_TESTE = "/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/casosDeTesteT1/3.arquivos_sem_erros";
+
+    // Deve haver dois subdiretorios: entrada e saida
+    private final static String CAMINHO_CASOS_TESTE = "/home/pegurin/compiladores2/CC2-DC-UFSCAR-2017-2/CC2T1/casosDeTesteT1/2.arquivos_com_erros_semanticos";
+    
+    // As flags GERA e VERIFICA são de uso do professor
+    // GERA = true significa que a saída vai ser gerada, sobrescrevendo qualquer
+    // conteudo do subdiretorio saida
+    // VERIFICA = true gera a saída junto com o conteúdo da entrada, para
+    // verificação
+    // Alunos: deixem ambas como "false"
+    private final static boolean GERA = false;
+    private final static boolean VERIFICA = false;
+
+    
+    // Descomente o método abaixo para testar
+    // Obs: este é o mesmo método que será usado pelo professor na correção
+    // A nota que você obtiver aqui será usada no cálculo de sua nota do trabalho
     
      
     public static void main(String[] args) throws IOException, RecognitionException {
@@ -46,7 +61,8 @@ public class Corrigir {
         
         for (File casoTeste : casosTeste) {
 
-            SaidaParser out = new SaidaParser();
+            SaidaParser out = new SaidaParser(0);
+            SaidaParser outSemantico = new SaidaParser(1);
             
             
 
@@ -60,13 +76,22 @@ public class Corrigir {
             
             try {
                 arvore = parser.programa();
+                
+                if (out.toString().isEmpty()){
+                    AnalisadorSemantico as = new AnalisadorSemantico(outSemantico);
+                    as.visitPrograma(arvore);
+                }
+                
              } catch (ParseCancellationException pce) {
                 if (pce.getMessage() != null) {
                    out.println(pce.getMessage());
                 }
              }
+            
+            String errors = out.toString() + outSemantico.toString();
 
-            if (!out.isModificado()) {
+            //if (!out.isModificado()) {
+            if (errors.isEmpty()) {
                 //casos sem erro : Gerar còdigo C
                 Gerador ger = new Gerador();
                 System.out.println(casoTeste.getName());
