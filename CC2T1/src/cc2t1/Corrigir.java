@@ -92,19 +92,35 @@ public class Corrigir {
 
             //if (!out.isModificado()) {
             if (errors.isEmpty()) {
-                //casos sem erro : Gerar còdigo C
-                Gerador ger = new Gerador();
-                System.out.println(casoTeste.getName());
-                ger.visitPrograma(arvore);
+                //casos sem erro : Gerar código C
+                try{
+                    String outGerador="";
+                    Gerador ger = new Gerador(outGerador);
+                    System.out.println(casoTeste.getName());
+                    ger.visitPrograma(arvore);
 
-                //TabelaDeSimbolos.imprimirTabela(out);
-                System.err.print(out);
-            } else {
-                out.println("Fim da compilacao");
+                    //TabelaDeSimbolos.imprimirTabela(out);
+                    System.err.print(out);             
+                    
+                    if(arqUnico){
+                        PrintWriter writer = new PrintWriter(arquivoSaida, "UTF-8");
+                        writer.print(outGerador);
+                        writer.close();
+                        arqUnico = false;
+                    }
+                } catch (ParseCancellationException pce){
+                    if (pce.getMessage() != null) {
+                       out.println(pce.getMessage());
+                    }                    
+                }
+                
+                
+                
+            } else {           
                 
                 if(arqUnico){
                     PrintWriter writer = new PrintWriter(arquivoSaida, "UTF-8");
-                    writer.print(out);
+                    writer.print(out.toString()+outSemantico.toString()+"Fim da compilacao\n");
                     writer.close();
                     arqUnico = false;
                 }

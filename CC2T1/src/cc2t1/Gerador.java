@@ -14,6 +14,12 @@ import java.util.ArrayList;
 public class Gerador extends LABaseVisitor <String>{
     String saidaCodigo = "";
     ArrayList <ListaTipoIdentificadores> listaIdent = new ArrayList();
+
+    public Gerador(String out) {
+        this.saidaCodigo = out;
+    }
+    
+    
     
     @Override
     public String visitPrograma(LAParser.ProgramaContext ctx) {
@@ -363,6 +369,4 @@ public class Gerador extends LABaseVisitor <String>{
         }
         return ""; 
     }
-    
-    
 }
