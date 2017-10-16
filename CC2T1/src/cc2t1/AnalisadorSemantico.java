@@ -268,6 +268,7 @@ public class AnalisadorSemantico extends LABaseVisitor<Void> {
                 while(nomeBase.peek() != null){
                     if(pilhaDeTabelas.topo().existeSimbolo(nomeBase.peek())){
                         sp.println("Linha "+linhas.peek()+": identificador "+ nomeBase.peek() +" ja declarado anteriormente");
+                        throw new RuntimeException ("Linha "+linhas.peek()+": identificador "+ nomeBase.peek() +" ja declarado anteriormente");
                     }
                     else{
                         pilhaDeTabelas.topo().adicionarSimbolo(nomeBase.peek(), "registro");
@@ -294,6 +295,7 @@ public class AnalisadorSemantico extends LABaseVisitor<Void> {
                             nomeVar = nomeBase.peek()+"."+auxCtx2.IDENT().getText();
                             if(pilhaDeTabelas.topo().existeSimbolo(nomeVar)){
                                 sp.println("Linha "+auxCtx2.IDENT().getSymbol().getLine()+": identificador "+ nomeVar +" ja declarado anteriormente");
+                                throw new RuntimeException("Linha "+auxCtx2.IDENT().getSymbol().getLine()+": identificador "+ nomeVar +" ja declarado anteriormente");
                             }
                             else{
                                     pilhaDeTabelas.topo().adicionarSimbolo(nomeVar, tipoVar);
@@ -305,6 +307,7 @@ public class AnalisadorSemantico extends LABaseVisitor<Void> {
                                 nomeVar = nomeBase.peek() +"."+ auxCtx4.IDENT().getText();
                                 if(pilhaDeTabelas.topo().existeSimbolo(nomeVar)){
                                     sp.println("Linha "+auxCtx4.IDENT().getSymbol().getLine()+": identificador "+ nomeVar +" ja declarado anteriormente");
+                                    throw new RuntimeException("Linha "+auxCtx4.IDENT().getSymbol().getLine()+": identificador "+ nomeVar +" ja declarado anteriormente");
                                 }
                                 else{
                                     pilhaDeTabelas.topo().adicionarSimbolo(nomeVar, tipoVar);
@@ -336,6 +339,7 @@ public class AnalisadorSemantico extends LABaseVisitor<Void> {
                         while(nomeBase.peek() != null){
                             if(pilhaDeTabelas.topo().existeSimbolo(nomeBase.peek())){
                                 sp.println("Linha "+linhas.peek()+": identificador "+ nomeBase.peek() +" ja declarado anteriormente");
+                                throw new RuntimeException("Linha "+linhas.peek()+": identificador "+ nomeBase.peek() +" ja declarado anteriormente");
                             }
                             else
                             {
@@ -360,6 +364,7 @@ public class AnalisadorSemantico extends LABaseVisitor<Void> {
                 while(nomeBase.peek() != null){
                     if(pilhaDeTabelas.topo().existeSimbolo(nomeBase.peek())){
                         sp.println("Linha "+linhas.peek()+": identificador "+ nomeBase.peek() +" ja declarado anteriormente");
+                        throw new RuntimeException("Linha "+linhas.peek()+": identificador "+ nomeBase.peek() +" ja declarado anteriormente");
                     }
                     else{
                         pilhaDeTabelas.topo().adicionarSimbolo(nomeBase.peek(), tipoVar);
@@ -374,6 +379,7 @@ public class AnalisadorSemantico extends LABaseVisitor<Void> {
             String nomeVar = ctx.IDENT().getText();
             if(pilhaDeTabelas.topo().existeSimbolo(nomeVar)){
                 sp.println("Linha "+ctx.IDENT().getSymbol().getLine()+": identificador "+ nomeVar +" ja declarado anteriormente");
+                throw new RuntimeException("Linha "+ctx.IDENT().getSymbol().getLine()+": identificador "+ nomeVar +" ja declarado anteriormente");
             }
             else{
                 //caso: 'constante' IDENT ':' tipo_basico '=' valor_constante
