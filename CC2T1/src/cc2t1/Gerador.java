@@ -13,6 +13,9 @@ import java.util.ArrayList;
  */
 public class Gerador extends LABaseVisitor <String>{
     String saidaCodigo = "";
+    ArrayList <TipoIdentificadores> listaIdent = new ArrayList();
+    ArrayList <TipoIdentificadores> listaConst = new ArrayList();
+
     
     @Override
     public String visitPrograma(LAParser.ProgramaContext ctx) {
@@ -25,7 +28,6 @@ public class Gerador extends LABaseVisitor <String>{
         
         //segue fluxo de acordo com regra gramatical
         visitDeclaracoes(ctx.declaracoes());
-        
         saidaCodigo +=  "\nint main() {";
         visitCorpo(ctx.corpo());
         
@@ -37,16 +39,16 @@ public class Gerador extends LABaseVisitor <String>{
                         "}";
         
         System.out.println(saidaCodigo+"\n\n");
-        return "";
+        return saidaCodigo;
     }
 
     @Override
     public String visitValor_constante(LAParser.Valor_constanteContext ctx) {
-        if(ctx.getText() ==  "verdadeiro"){
+        if("verdadeiro".equals(ctx.getText())){
             saidaCodigo += "true";
             return null;
         }
-        if(ctx.getText() ==  "falso"){
+        if("falso".equals(ctx.getText())){
             saidaCodigo += "false";
             return null;
         }
@@ -68,6 +70,9 @@ public class Gerador extends LABaseVisitor <String>{
             return null;
         }
         if (ctx.valor_constante()!= null){//árvore na regra 'constante'
+            TipoIdentificadores constante;
+            constante = new TipoIdentificadores(ctx.IDENT().getText(), ctx.tipo_basico().getText());
+            listaConst.add(constante);
             saidaCodigo += "\n#define " + ctx.IDENT() + " ";
             visitValor_constante(ctx.valor_constante());
             return null;
@@ -82,12 +87,34 @@ public class Gerador extends LABaseVisitor <String>{
         return "";
     }
 
+    @Override
+    public String visitDeclaracao_global(LAParser.Declaracao_globalContext ctx) {
+        if(ctx.comando_proc != null){ // regra de procedimento
+            saidaCodigo += "\nvoid " + ctx.IDENT().getText() + " (";
+            visitParametros_opcional(ctx.parametros_opcional());
+            saidaCodigo +=  "){";
+            visitDeclaracoes_locais(ctx.declaracoes_locais());
+            visitComandos(ctx.comandos());
+            saidaCodigo += "}";
+        }
+        else if (!"".equals(ctx.comando_func.getText())){
+            saidaCodigo += "\n";
+            visitTipo_estendido(ctx.tipo_estendido());
+            saidaCodigo +=  ctx.IDENT().getText() + "(";
+            visitParametros_opcional(ctx.parametros_opcional());
+            saidaCodigo += "){ ";
+            visitDeclaracoes_locais(ctx.declaracoes_locais());
+            visitComandos(ctx.comandos());
+            saidaCodigo += "\n}";
+        }
+        listaIdent.clear();
+        return "";
+    }
     
-    
-    
+
     @Override
     public String visitRegistro(LAParser.RegistroContext ctx) {// struct
-        saidaCodigo += "struct{";
+        saidaCodigo += "\nstruct{";
         visitVariavel(ctx.variavel());
         visitMais_variaveis(ctx.mais_variaveis());
         saidaCodigo += "\n} "+ ctx.variavel().IDENT();
@@ -103,8 +130,26 @@ public class Gerador extends LABaseVisitor <String>{
     }
 
     @Override
+    public String visitTipo_estendido(LAParser.Tipo_estendidoContext ctx) {
+        visitPonteiros_opcionais(ctx.ponteiros_opcionais());
+        if(ctx.tipo_basico_ident().tipo_basico() != null){
+            String tipo = visitTipo_basico(ctx.tipo_basico_ident().tipo_basico());
+            saidaCodigo += tipo;
+            if(tipo.equals("char")){
+                saidaCodigo += "*";
+            }
+            saidaCodigo += " ";
+        }
+        else{
+            saidaCodigo += ctx.getText() + " ";
+        }
+        return "";
+    }
+    
+
+    @Override
     public String visitMais_parametros(LAParser.Mais_parametrosContext ctx) {
-        if(ctx.getText() == null  || ctx.getText() == ""){
+        if(ctx.getText() == null  || "".equals(ctx.getText())){
             return null;
         }
         saidaCodigo += ", ";
@@ -114,7 +159,7 @@ public class Gerador extends LABaseVisitor <String>{
 
     @Override
     public String visitParametros_opcional(LAParser.Parametros_opcionalContext ctx) {
-        if(ctx.getText() == null  || ctx.getText() == ""){
+        if(ctx.getText() == null  || "".equals(ctx.getText())){
             return null;
         }
         visitParametro(ctx.parametro());
@@ -124,7 +169,18 @@ public class Gerador extends LABaseVisitor <String>{
     
     @Override
     public String visitVariavel(LAParser.VariavelContext ctx) {
-        saidaCodigo +=  "\n" +visitTipo(ctx.tipo()) + " ";
+        TipoIdentificadores var;
+        var = new TipoIdentificadores(ctx.IDENT().getText(), ctx.tipo().getText());
+        listaIdent.add(var);
+        LAParser.Mais_varContext ctx_mv = ctx.mais_var();
+        while(ctx_mv != null){
+            var = new TipoIdentificadores(ctx_mv.IDENT().getText(), ctx.tipo().getText());
+            listaIdent.add(var);
+            ctx_mv = ctx_mv.mais_var();
+        }
+        saidaCodigo +=  "\n";
+        visitTipo(ctx.tipo());
+        saidaCodigo += " ";
         saidaCodigo += ctx.IDENT().getText();
         visitDimensao(ctx.dimensao());
         visitMais_var(ctx.mais_var());
@@ -134,7 +190,7 @@ public class Gerador extends LABaseVisitor <String>{
 
     @Override
     public String visitMais_expressao(LAParser.Mais_expressaoContext ctx) {
-        if(ctx.getText() == null || ctx.getText() == ""){
+        if(ctx.getText() == null || "".equals(ctx.getText())){
             return null;
         }
         visitExpressao(ctx.expressao());
@@ -144,7 +200,7 @@ public class Gerador extends LABaseVisitor <String>{
 
     @Override
     public String visitSenao_opcional(LAParser.Senao_opcionalContext ctx) {
-        if(ctx.getText() == null || ctx.getText() == ""){
+        if(ctx.getText() == null || "".equals(ctx.getText())){
             return null;
         }
         saidaCodigo += "\nelse{" + visitComandos(ctx.comandos()) + "\n}";
@@ -155,7 +211,7 @@ public class Gerador extends LABaseVisitor <String>{
     
     @Override
     public String visitMais_var(LAParser.Mais_varContext ctx) {
-        if( ctx == null || ctx.getText() == "" ){
+        if( ctx == null || "".equals(ctx.getText()) ){
          return null;
         }
         saidaCodigo += ", " + ctx.IDENT().getText() ;
@@ -166,10 +222,12 @@ public class Gerador extends LABaseVisitor <String>{
     
     @Override
     public String visitDimensao(LAParser.DimensaoContext ctx) {
-        if( ctx == null || ctx.getText() == "" ){
+        if( ctx == null || "".equals(ctx.getText()) ){
          return null;
         }
-        saidaCodigo += "[" + visitExp_aritmetica(ctx.exp_aritmetica()) + "]";
+        saidaCodigo += "[";
+        visitExp_aritmetica(ctx.exp_aritmetica());
+        saidaCodigo += "]";
         return "";
     }
     
@@ -222,7 +280,6 @@ public class Gerador extends LABaseVisitor <String>{
         visitOutros_termos_logicos(ctx.outros_termos_logicos());
         return "";
     }
-
     @Override
     public String visitExp_aritmetica(LAParser.Exp_aritmeticaContext ctx) {
         saidaCodigo += " " + ctx.getText() + " ";
@@ -240,7 +297,7 @@ public class Gerador extends LABaseVisitor <String>{
 
     @Override
     public String visitOutros_ident(LAParser.Outros_identContext ctx) {
-        if(ctx == null || ctx.getText() == ""){
+        if(ctx == null || "".equals(ctx.getText())){
             return "";
         }
         saidaCodigo += ".";
@@ -251,7 +308,7 @@ public class Gerador extends LABaseVisitor <String>{
 
     @Override
     public String visitPonteiros_opcionais(LAParser.Ponteiros_opcionaisContext ctx) {
-        if( ctx == null || ctx.getText() == "" ){
+        if( ctx == null || "".equals(ctx.getText()) ){
             return "";
         }
         return "*" + visitPonteiros_opcionais(ctx.ponteiros_opcionais());
@@ -259,18 +316,17 @@ public class Gerador extends LABaseVisitor <String>{
     
     @Override
     public String visitParcela_logica(LAParser.Parcela_logicaContext ctx) {
-        if(ctx.getText() ==  "verdadeiro"){
+        if("verdadeiro".equals(ctx.getText())){
             saidaCodigo += "true";
             return null;
         }
-        if(ctx.getText() ==  "falso"){
+        if("falso".equals(ctx.getText())){
             saidaCodigo += "false";
             return null;
         }
         visitExp_relacional(ctx.exp_relacional());
         return "";
     }
-    
     
     
     //Regra de operadores relacionais
@@ -309,14 +365,55 @@ public class Gerador extends LABaseVisitor <String>{
         }
         return "";
     }
-
+    
     @Override
     public String visitCmd(LAParser.CmdContext ctx) {
         if ( ctx.identificador() != null ){//árvore na regra 'leia'
-            saidaCodigo += "\nscanf(%s, &";
+            TipoIdentificadores var = new TipoIdentificadores();
+            for(TipoIdentificadores ti : listaIdent){
+                if(ti.getIdentificador().equals(ctx.identificador().IDENT().getText())){
+                    var = ti;
+                }
+            }
+            if(var.getTipo().equals("inteiro")){
+             saidaCodigo += "\nscanf(\"%d\", &";
+            }
+            else if(var.getTipo().equals("literal")){
+             saidaCodigo += "\ngets(";
+            }
+            else if(var.getTipo().equals("real")){
+             saidaCodigo += "\nscanf(\"%f\", &";
+            }
             visitIdentificador(ctx.identificador());
-            visitMais_ident(ctx.mais_ident());
             saidaCodigo += ");";
+            
+            LAParser.Mais_identContext ctx_mi = ctx.mais_ident();
+            while(ctx_mi != null){
+                System.out.println(">" + ctx_mi.identificador().IDENT().getText());
+                for(TipoIdentificadores ti : listaIdent){
+                    if(ti.getIdentificador().equals(ctx_mi.identificador().IDENT().getText())){
+                        var = ti;
+                    }
+                }
+                
+               if(var.getTipo().equals("inteiro")){
+                saidaCodigo += "\nscanf(\"%d\", &";
+               }
+               else if(var.getTipo().equals("literal")){
+                saidaCodigo += "\ngets(";
+               }
+               else if(var.getTipo().equals("real")){
+                saidaCodigo += "\nscanf(\"%f\", &";
+               }
+               visitIdentificador(ctx.identificador());
+               if(ctx.mais_ident()!=null)
+                   visitMais_ident(ctx.mais_ident());
+               saidaCodigo += ");";
+               
+               ctx_mi = ctx_mi.mais_ident();
+            }
+            
+            
             return null;
         }
         if (ctx.exp_escreva != null ){//árvore na regra 'escreva'
@@ -351,7 +448,7 @@ public class Gerador extends LABaseVisitor <String>{
             return null;
         }
         if (ctx.exp_faca != null ){//árvore na regra 'faca'
-            saidaCodigo += "do{";
+            saidaCodigo += "\ndo{";
             saidaCodigo += "\n" + visitComandos(ctx.comandos());
             saidaCodigo += "\n}";
             saidaCodigo += "\nwhile(" + visitExpressao(ctx.expressao()) + ");";
@@ -370,16 +467,35 @@ public class Gerador extends LABaseVisitor <String>{
             return null;
         }
         if (ctx.exp_retorne != null){//árvore na regra 'retorne'
-            saidaCodigo += "\nreturn" + visitExpressao(ctx.expressao());
+            saidaCodigo += "\nreturn ";
+            visitExpressao(ctx.expressao());
+            saidaCodigo += ";";
             return null;
         }
         return ""; //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
+    public String visitExpressao(LAParser.ExpressaoContext ctx) {
+        visitTermo_logico(ctx.termo_logico());
+        visitOutros_termos_logicos(ctx.outros_termos_logicos());
+        return "";
+    }
+    
+
+    @Override
     public String visitChamada_atribuicao(LAParser.Chamada_atribuicaoContext ctx) {
-        if(ctx.argumentos_opcional() != null){ // árvore na regra outros_ident
-            
+        if(ctx.argumentos_opcional() != null){ // árvore na regra argumentos_opcional
+            saidaCodigo += "(";
+            visitArgumentos_opcional(ctx.argumentos_opcional());
+            saidaCodigo += ");";
+        }
+        else{// árvore na regra outros_ident
+            visitOutros_ident(ctx.outros_ident());
+            visitDimensao(ctx.dimensao());
+            saidaCodigo += " =";
+            visitExpressao(ctx.expressao());
+            saidaCodigo += ";";
         }
         return ""; 
     }

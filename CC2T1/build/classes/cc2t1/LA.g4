@@ -16,11 +16,11 @@ declaracao_local: 'declare' variavel
  | 'constante' IDENT ':' tipo_basico '=' valor_constante
  | tipo IDENT ':' tipo ;
 
-variavel: IDENT dimensao mais_var ':' tipo;
+variavel: IDENT dimensao (mais_var)? ':' tipo;
 
-mais_var: (',' IDENT dimensao mais_var)?;
+mais_var: ',' IDENT dimensao (mais_var)?;
 
-identificador returns [String tipo]: ponteiros_opcionais IDENT dimensao outros_ident;
+identificador: ponteiros_opcionais IDENT dimensao outros_ident;
 
 ponteiros_opcionais: ('^' ponteiros_opcionais)?;
 
@@ -30,7 +30,7 @@ dimensao: ('[' exp_aritmetica ']' dimensao)?;
 
 tipo: registro | tipo_estendido;
 
-mais_ident: (',' identificador mais_ident)?;
+mais_ident: ',' identificador (mais_ident)?;
 
 mais_variaveis: (variavel mais_variaveis)?;
 
@@ -44,12 +44,12 @@ valor_constante: CADEIA | NUM_INT | NUM_REAL | 'verdadeiro' | 'falso';
 
 registro: 'registro' variavel mais_variaveis 'fim_registro';
 
-declaracao_global: 'procedimento' IDENT '(' parametros_opcional ')' declaracoes_locais comandos 'fim_procedimento'
- | 'funcao' IDENT '(' parametros_opcional ')' ':' tipo_estendido declaracoes_locais comandos 'fim_funcao';
+declaracao_global: 'procedimento' IDENT '(' parametros_opcional ')' declaracoes_locais comando_proc=comandos 'fim_procedimento'
+ | 'funcao' IDENT '(' parametros_opcional ')' ':' tipo_estendido declaracoes_locais comando_func=comandos 'fim_funcao';
 
 parametros_opcional: (parametro)?;
 
-parametro: var_opcional identificador mais_ident ':' tipo_estendido mais_parametros;
+parametro: var_opcional identificador (mais_ident)? ':' tipo_estendido mais_parametros;
 
 var_opcional: ('var')?;
 
@@ -61,7 +61,7 @@ corpo: declaracoes_locais comandos;
 
 comandos: (cmd comandos)?;
 
-cmd: 'leia' '(' identificador mais_ident ')'
+cmd: 'leia' '(' identificador (mais_ident)? ')'
  | 'escreva' '(' exp_escreva=expressao mais_expressao ')'
  | 'se' exp_se=expressao 'entao' comandos senao_se=senao_opcional 'fim_se'
  | 'caso' exp_a_caso=exp_aritmetica 'seja' selecao senao_caso=senao_opcional 'fim_caso'
