@@ -3,9 +3,10 @@ Projeto realizado referente à disciplina Construção de Compiladores 2 leciona
 
 #### Alunos:
     André Camargo Rocha            RA: 587052
-    Pedro Apolloni                 RA: 587109
     João Gabriel Fanhani Marins    RA: 586919
     Luís Paulo Pegurin             RA: 586960
+    Pedro Apolloni                 RA: 587109
+    
     
 ### DESCRIÇÃO
 
