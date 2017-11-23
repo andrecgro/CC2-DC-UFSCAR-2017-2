@@ -48,6 +48,26 @@ public interface CVLListener extends ParseTreeListener {
 	 */
 	void exitContato(CVLParser.ContatoContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CVLParser#formacao}.
+	 * @param ctx the parse tree
+	 */
+	void enterFormacao(CVLParser.FormacaoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CVLParser#formacao}.
+	 * @param ctx the parse tree
+	 */
+	void exitFormacao(CVLParser.FormacaoContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CVLParser#idiomas}.
+	 * @param ctx the parse tree
+	 */
+	void enterIdiomas(CVLParser.IdiomasContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CVLParser#idiomas}.
+	 * @param ctx the parse tree
+	 */
+	void exitIdiomas(CVLParser.IdiomasContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CVLParser#email}.
 	 * @param ctx the parse tree
 	 */
@@ -67,4 +87,44 @@ public interface CVLListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTel(CVLParser.TelContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CVLParser#redess}.
+	 * @param ctx the parse tree
+	 */
+	void enterRedess(CVLParser.RedessContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CVLParser#redess}.
+	 * @param ctx the parse tree
+	 */
+	void exitRedess(CVLParser.RedessContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CVLParser#linkedin}.
+	 * @param ctx the parse tree
+	 */
+	void enterLinkedin(CVLParser.LinkedinContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CVLParser#linkedin}.
+	 * @param ctx the parse tree
+	 */
+	void exitLinkedin(CVLParser.LinkedinContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CVLParser#github}.
+	 * @param ctx the parse tree
+	 */
+	void enterGithub(CVLParser.GithubContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CVLParser#github}.
+	 * @param ctx the parse tree
+	 */
+	void exitGithub(CVLParser.GithubContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link CVLParser#lattes}.
+	 * @param ctx the parse tree
+	 */
+	void enterLattes(CVLParser.LattesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CVLParser#lattes}.
+	 * @param ctx the parse tree
+	 */
+	void exitLattes(CVLParser.LattesContext ctx);
 }

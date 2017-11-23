@@ -35,6 +35,18 @@ public interface CVLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitContato(CVLParser.ContatoContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CVLParser#formacao}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormacao(CVLParser.FormacaoContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CVLParser#idiomas}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdiomas(CVLParser.IdiomasContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CVLParser#email}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -46,4 +58,28 @@ public interface CVLVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTel(CVLParser.TelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CVLParser#redess}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRedess(CVLParser.RedessContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CVLParser#linkedin}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLinkedin(CVLParser.LinkedinContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CVLParser#github}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGithub(CVLParser.GithubContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link CVLParser#lattes}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLattes(CVLParser.LattesContext ctx);
 }
