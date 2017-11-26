@@ -48,6 +48,16 @@ public interface CVLListener extends ParseTreeListener {
 	 */
 	void exitContato(CVLParser.ContatoContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link CVLParser#formacoes}.
+	 * @param ctx the parse tree
+	 */
+	void enterFormacoes(CVLParser.FormacoesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link CVLParser#formacoes}.
+	 * @param ctx the parse tree
+	 */
+	void exitFormacoes(CVLParser.FormacoesContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link CVLParser#formacao}.
 	 * @param ctx the parse tree
 	 */

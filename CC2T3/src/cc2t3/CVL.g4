@@ -1,6 +1,6 @@
 grammar CVL;
 
-curriculo: 'curriculo:' nome especialidade contato formacao idiomas resumo experiencias projetos;
+curriculo: 'curriculo:' nome especialidade contato formacoes idiomas;
 
 nome: 'nome:' CADEIA;
 
@@ -8,9 +8,11 @@ especialidade: 'especialidade:' CADEIA;
 
 contato: 'contato:' (tel | email | redess)+;
 
-formacao: 'formacao:' CADEIA=curso CADEIA=universidade ANO=inicio ' - ' (ANO=atual | 'Presente');
+formacoes: 'formacoes:' (formacao)+;
 
-idiomas: 'idiomas:' IDIOMA;
+formacao: curso=CADEIA universidade=CADEIA inicio=ANO ' - ' atual=(ANO | 'Presente');
+
+idiomas: 'idiomas:' (idioma += IDIOMA)+;
 
 email: 'email:' MAIL;
 
@@ -18,17 +20,19 @@ tel: 'tel:' TELEFONE;
 
 redess: 'social:' (linkedin | github | lattes)+;
 
-linkedin: ('http://' | 'https://')? ('www.')? 'linkedin.com/in/' USUARIO=linkedin;
+linkedin: ('http://' | 'https://')? ('www.')? 'linkedin.com/in/' linkedinU=USUARIO;
 
-github: ('http://' | 'https://')? ('www.')? 'github.com/' USUARIO=github;
+github: ('http://' | 'https://')? ('www.')? 'github.com/' githubU=USUARIO;
 
-lattes: ('http://' | 'https://')? ('www.')? 'lattes.cnpq.br/' USUARIO=lattes;
+lattes: ('http://' | 'https://')? ('www.')? 'lattes.cnpq.br/' lattesU=USUARIO;
 
 fragment
 DIGITO: ('0'..'9'); 
 
-USUARIO: '"'~(' ' | '\t' | '\r' | '\n')*'"';
+IDIOMA: '"'~('\t' | '\r' | '\n')* ('(Nativo)' | '(Avançado)' | '(Intermediário)' | '(Básico)')'"';
 
+USUARIO: '"'~(' ' | '\t' | '\r' | '\n')*'"';
+  
 NUMERO: DIGITO DIGITO DIGITO DIGITO DIGITO '-' DIGITO DIGITO DIGITO DIGITO;
 
 DDD: '(' ('0'..'9') ('0'..'9') ')';
@@ -43,8 +47,6 @@ MAIL: CARACTERE+ '@' CARACTERE+ '.' CARACTERE CARACTERE CARACTERE;
 COMENTARIO: '#' ~('\n' | '\r')* ('\n' | '\r') {skip();};
 
 CADEIA: '"'~('\n')*'"';
-
-IDIOMA:  '"'~(' ' | '\t' | '\r' | '\n')* ('Nativo' | 'Avançado' | 'Intermediário' | 'Básico')'"';
 
 ANO: DIGITO DIGITO DIGITO DIGITO;
 

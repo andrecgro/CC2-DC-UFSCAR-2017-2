@@ -20,6 +20,10 @@ public class Corrigir {
     
      
     public static void main(String[] args) throws IOException, RecognitionException {
+        TemplateProcessor tp = new TemplateProcessor();
+        tp.processTemplateFile(new File("/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T3/andre.html"));
+        
+        /*
         File diretorioCasosTeste = null;
         File[] casosTeste = null;
         File   arquivoSaida = null;
@@ -88,6 +92,6 @@ public class Corrigir {
                     arqUnico = false;
                 }
             }
-        }
+        }*/
     }
 }

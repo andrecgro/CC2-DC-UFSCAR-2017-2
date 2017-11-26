@@ -35,6 +35,12 @@ public interface CVLVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitContato(CVLParser.ContatoContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link CVLParser#formacoes}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFormacoes(CVLParser.FormacoesContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link CVLParser#formacao}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

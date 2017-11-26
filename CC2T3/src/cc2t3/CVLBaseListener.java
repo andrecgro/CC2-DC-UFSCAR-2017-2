@@ -64,6 +64,18 @@ public class CVLBaseListener implements CVLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterFormacoes(CVLParser.FormacoesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFormacoes(CVLParser.FormacoesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFormacao(CVLParser.FormacaoContext ctx) { }
 	/**
 	 * {@inheritDoc}
