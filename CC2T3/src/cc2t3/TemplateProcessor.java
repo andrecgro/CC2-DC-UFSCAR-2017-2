@@ -9,10 +9,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -21,6 +23,7 @@ import java.util.regex.Pattern;
  */
 public class TemplateProcessor {
     // retorna uma lista com todas as tags usadas no template
+    Map matchedHash = new HashMap();
     public List<String> processTemplateFile(File file) throws IOException {
         String fileContent = "";
         try {
@@ -30,9 +33,14 @@ public class TemplateProcessor {
                 fileContent += (char)b;
             }
             
-            System.out.println(fileContent);
+            Pattern p = Pattern.compile("%.+%");
+            Matcher matchedTokens = p.matcher(fileContent);
             
-            Pattern p = Pattern.compile("${.*}");
+            while(matchedTokens.find()){
+                matchedHash.put(matchedTokens.end(),matchedTokens.group());
+            }
+            
+            System.out.println(matchedHash);
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(TemplateProcessor.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,7 +48,14 @@ public class TemplateProcessor {
         return null;
     }
     
-    public void replaceTags(File template, File output, Map<String, String> resultadoVisitor) {
+    public boolean checkTokenReplacing(String token) throws IOException{
+        if(matchedHash.containsValue(token)){
+            return true;
+        }
+        return false;
+    }
+    
+    /*public void replaceTags(File template, File output, Map<String, String> resultadoVisitor) {
         String fileContent = "";
         try {
             FileReader fr = new FileReader(template);
@@ -58,6 +73,6 @@ public class TemplateProcessor {
         
         // escrever fileContent no output
         
-    }
+    }*/
     
 }
