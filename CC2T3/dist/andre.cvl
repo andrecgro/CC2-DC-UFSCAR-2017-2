@@ -1,7 +1,7 @@
 #Curriculo André
 #Atualizado 23/11/22017
 
-curriculo "cv.html" -> "andre.html":
+curriculo:
   nome: "André Rocha"
   especialidade: "Desenvolvedor Web"
   contato:
@@ -19,8 +19,3 @@ curriculo "cv.html" -> "andre.html":
     "Português (Nativo)"
     "Inglês (Avançado)"
     "Espanhol (Básico)"
-
-
-blabla ${contato.email} bleblebe
-
-blabla andre@gmail.com bleblebe
