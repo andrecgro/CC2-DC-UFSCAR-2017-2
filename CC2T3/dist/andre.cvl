@@ -1,0 +1,21 @@
+#Curriculo André
+#Atualizado 23/11/22017
+
+curriculo:
+  nome: "André Rocha"
+  especialidade: "Desenvolvedor Web"
+  contato:
+    email: andre@gmail.com
+    tel: (16)98160-1140
+  formacoes:
+    "Bacharelado em Ciência da Computação"
+    "Universidade Federal de São Carlos"
+    2014 - 2018
+
+    "MBA em Gestão de Empresas"
+    "Fundação Getúlio Vargas"
+    2018 - 2020
+  idiomas:
+    "Português (Nativo)"
+    "Inglês (Avançado)"
+    "Espanhol (Básico)"

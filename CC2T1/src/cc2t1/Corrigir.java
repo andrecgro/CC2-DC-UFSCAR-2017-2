@@ -39,7 +39,7 @@ public class Corrigir {
         }
         
         if(!arqUnico){
-            diretorioCasosTeste = new File(CAMINHO_CASOS_TESTE + "/entrada");
+            diretorioCasosTeste = new File(CAMINHO_CASOS_TESTE + "/1.entrada");
             casosTeste = diretorioCasosTeste.listFiles();
         }
         
@@ -67,12 +67,17 @@ public class Corrigir {
              }
 
             if (!out.isModificado()) {
-                //casos sem erro : Gerar còdigo C
+                //casos sem erro : Gerar código C
                 Gerador ger = new Gerador();
                 System.out.println(casoTeste.getName());
-                ger.visitPrograma(arvore);
+                String codigo = ger.visitPrograma(arvore);
 
-                //TabelaDeSimbolos.imprimirTabela(out);
+                if(arqUnico){
+                    PrintWriter writer = new PrintWriter(arquivoSaida, "UTF-8");
+                    writer.print(codigo);
+                    writer.close();
+                    arqUnico = false;
+                }
                 System.err.print(out);
             } else {
                 out.println("Fim da compilacao");
