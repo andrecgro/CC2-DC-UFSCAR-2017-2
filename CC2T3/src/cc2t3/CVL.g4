@@ -1,3 +1,5 @@
+grammar CVL;
+
 documento : campo*;
 
 campo: nomeCampo=ID ':' valor;
