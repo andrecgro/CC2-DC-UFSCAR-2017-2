@@ -12,22 +12,14 @@ import java.util.List;
  * @author joaogabriel
  */
 public class TabelaDeSimbolos {
-    private String escopo;
     private List<EntradaTabelaDeSimbolos> simbolos;
     
-    public TabelaDeSimbolos(String escopo) {
+    public TabelaDeSimbolos() {
         simbolos = new ArrayList<EntradaTabelaDeSimbolos>();
-        this.escopo = escopo;
     }
     
-    public void adicionarSimbolo(String nome, String tipo) {
-        simbolos.add(new EntradaTabelaDeSimbolos(nome,tipo));
-    }
-    
-    public void adicionarSimbolos(List<String> nomes, String tipo) {
-        for(String s:nomes) {
-            simbolos.add(new EntradaTabelaDeSimbolos(s, tipo));
-        }
+    public void adicionarSimbolo(String nome, String valor) {
+        simbolos.add(new EntradaTabelaDeSimbolos(nome,valor));
     }
     
     public boolean existeSimbolo(String nome) {
@@ -41,7 +33,7 @@ public class TabelaDeSimbolos {
     
     @Override
     public String toString() {
-        String ret = "Escopo: "+escopo;
+        String ret = "";
         for(EntradaTabelaDeSimbolos etds:simbolos) {
             ret += "\n   "+etds;
         }

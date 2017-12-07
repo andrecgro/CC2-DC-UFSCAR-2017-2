@@ -5,6 +5,7 @@ ID=4
 COMENTARIO=5
 STRING=6
 WS=7
+ERROR=8
 ':'=1
 '{'=2
 '}'=3

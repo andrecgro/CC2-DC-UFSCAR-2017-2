@@ -20,10 +20,6 @@ public class Corrigir {
     
      
     public static void main(String[] args) throws IOException, RecognitionException {
-        TemplateProcessor tp = new TemplateProcessor();
-        tp.processTemplateFile(new File("/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T3/andre.html"));
-        
-        /*
         File diretorioCasosTeste = null;
         File[] casosTeste = null;
         File   arquivoSaida = null;
@@ -46,7 +42,34 @@ public class Corrigir {
             casosTeste = diretorioCasosTeste.listFiles();
         }
         
+        for(File casoTeste : casosTeste){
+            System.out.println("Começando análise do arquivo: "+ casoTeste.getName());
+            SaidaParser out = new SaidaParser();
+            
+            ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(casoTeste));
+            CVLLexer lexer = new CVLLexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            CVLParser parser = new CVLParser(tokens);
+            parser.addErrorListener(new T3ErrorListener(out));
+            
+            CVLParser.DocumentoContext arvore = null;
+            
+            try {
+                arvore = parser.documento();
+             } catch (ParseCancellationException pce) {
+                if (pce.getMessage() != null) {
+                   out.println(pce.getMessage());
+                }
+             }
+            System.out.println(out.conteudo);
+            
+            AnalisadorSemantico analisadorSemantico = new AnalisadorSemantico();
+            TabelaDeSimbolos tabela = (TabelaDeSimbolos) analisadorSemantico.visitDocumento(arvore);
+            
+            System.out.println(tabela);
+        }
         
+        /*
         for (File casoTeste : casosTeste) {
 
             SaidaParser out = new SaidaParser();
