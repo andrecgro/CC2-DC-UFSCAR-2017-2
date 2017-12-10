@@ -23,12 +23,23 @@ public class TabelaDeSimbolos {
     }
     
     public boolean existeSimbolo(String nome) {
+        //System.out.println("Analisando "+nome+" na tabela de símbolos");
         for(EntradaTabelaDeSimbolos etds:simbolos) {
+            //System.out.println("Analisando "+nome+" na tabela de símbolos");
             if(etds.getNome().equals(nome)) {
                 return true;
             }
         }
         return false;
+    }
+    
+    public String getValor(String nome) {
+        for(EntradaTabelaDeSimbolos etds:simbolos) {
+            if(etds.getNome().equals(nome)) {
+                return etds.getValor();
+            }
+        }
+        return null;
     }
     
     @Override

@@ -36,7 +36,7 @@ public class AnalisadorSemantico extends CVLBaseVisitor{
                 }
                 else{
                     try {
-                        throw new Exception("Variável "+valor[0]+" duplamente declarada no mesmo escopo.");
+                        throw new Exception("Identificador "+valor[0]+" já declarado no escopo.");
                     } catch (Exception ex) {
                         Logger.getLogger(AnalisadorSemantico.class.getName()).log(Level.SEVERE, null, ex);
                     }
