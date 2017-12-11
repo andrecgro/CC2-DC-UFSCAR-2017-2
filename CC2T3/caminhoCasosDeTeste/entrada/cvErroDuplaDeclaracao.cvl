@@ -1,0 +1,63 @@
+#CV Alan Turing
+#Atualizado 09/12/2017
+
+curriculo:{
+    foto: "img/turing.png"
+    nome:"Alan Turing"
+    especialidade:"Linguagens Formais e Autômatos"
+    contato:{
+        email:"turing@ig.com.br"
+        tel:"(16)91010-1010"
+    }
+    formacoes:{
+ 	um:{
+            universidade:"Universidade Federal de São Carlos"
+            curso:"Bacharelado em Ciência da Computação"
+            periodo:"1930-1936"
+        }
+	dois:{
+	     universidade:"Universidade Federal de São Carlos"
+	     curso:"Mestrado em Ciência da Computação"
+	     periodo: "1936-1938"
+	}
+    }
+    experiencias:{
+        um:{
+            titulo:"Iniciação Ciêntifica em Autômatos"
+            local:"DC - Universidade Federal de São Carlos"
+            periodo:"1932-1934"
+        }
+	dois:{
+	    titulo:"Decoficicação de mensagens da máquina Enigma"
+	    local: "Reino Unido"
+	    periodo: "1939-1945"
+        } 
+    }
+    habilidades:{
+	um:{
+	    titulo:"Linguagens Formais e Autômatos"
+	}
+	dois:{
+	    titulo:"Trabalho em equipe"
+	}
+	tres:{
+	    titulo:"Liderança"	
+	}
+	quatro:{
+	    titulo:"Proatividade"
+	}
+    }
+    habilidades:{
+	um:{
+	    titulo:"LFA"
+	}
+    }
+}
+
+
+
+
+
+
+
+
