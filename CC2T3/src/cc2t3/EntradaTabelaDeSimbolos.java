@@ -9,23 +9,23 @@ package cc2t3;
  * @author joaogabriel
  */
 public class EntradaTabelaDeSimbolos {
-    private String nome, tipo;
+    private String nome, valor;
     
-    public EntradaTabelaDeSimbolos(String nome, String tipo) {
+    public EntradaTabelaDeSimbolos(String nome, String valor) {
         this.nome = nome;
-        this.tipo = tipo;
+        this.valor = valor;
     }
     
     public String getNome() {
         return nome;
     }
     
-    public String getTipo() {
-        return tipo;
+    public String getValor() {
+        return valor;
     }
     
     @Override
     public String toString() {
-        return nome+"("+tipo+")";
+        return "[nome: "+nome+" ; valor: "+valor+"]";
     }
 }

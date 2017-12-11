@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,8 @@ import java.util.regex.Pattern;
  */
 public class TemplateProcessor {
     // retorna uma lista com todas as tags usadas no template
-    Map matchedHash = new HashMap();
-    public List<String> processTemplateFile(File file) throws IOException {
+    Map<Integer, String> matchedHash = new HashMap<Integer,String>();
+    public Map processTemplateFile(File file) throws IOException {
         String fileContent = "";
         try {
             FileReader fr = new FileReader(file);
@@ -33,14 +34,15 @@ public class TemplateProcessor {
                 fileContent += (char)b;
             }
             
-            Pattern p = Pattern.compile("%.+%");
+            Pattern p = Pattern.compile("%[^%(\\n)]+%");
             Matcher matchedTokens = p.matcher(fileContent);
-            
+            Integer key;
             while(matchedTokens.find()){
-                matchedHash.put(matchedTokens.end(),matchedTokens.group());
+                key = matchedTokens.end()-matchedTokens.group().length();
+                matchedHash.put(key,matchedTokens.group());
             }
             
-            System.out.println(matchedHash);
+            return matchedHash;
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(TemplateProcessor.class.getName()).log(Level.SEVERE, null, ex);
@@ -48,31 +50,31 @@ public class TemplateProcessor {
         return null;
     }
     
-    public boolean checkTokenReplacing(String token) throws IOException{
-        if(matchedHash.containsValue(token)){
-            return true;
-        }
-        return false;
-    }
-    
-    /*public void replaceTags(File template, File output, Map<String, String> resultadoVisitor) {
+    public void replaceTags(File template, File output, Map<String, String> resultadoGerador) throws IOException {
         String fileContent = "";
+        
         try {
             FileReader fr = new FileReader(template);
             int b = 0;
             while((b = fr.read())!=-1) {
                 fileContent += (char)b;
             }
+            
         } catch (FileNotFoundException ex) {
             Logger.getLogger(TemplateProcessor.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-       String txt = resultadoVisitor.get("curriculo.nome");
-       
-        // substituir no fileContent
+        Pattern p = Pattern.compile("%[^%(\\n)]+%");
+        Matcher matchedTokens = p.matcher(fileContent);
+        StringBuffer sb = new StringBuffer();
         
-        // escrever fileContent no output
-        
-    }*/
+        while(matchedTokens.find()){
+            matchedTokens.appendReplacement(sb, resultadoGerador.get(matchedTokens.group()));
+        }
+        matchedTokens.appendTail(sb);
+        PrintWriter writer = new PrintWriter(output, "UTF-8");
+        writer.print(sb);
+        writer.close();
+    }
     
 }
