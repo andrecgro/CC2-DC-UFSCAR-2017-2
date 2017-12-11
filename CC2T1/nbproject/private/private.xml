@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/pegurin/compiladores2/CC2-DC-UFSCAR-2017-2/CC2T1/src/cc2t1/CC2T1.java</file>
-            <file>file:/home/pegurin/compiladores2/CC2-DC-UFSCAR-2017-2/CC2T1/src/cc2t1/T1ErrorListener.java</file>
-            <file>file:/home/pegurin/compiladores2/CC2-DC-UFSCAR-2017-2/CC2T1/src/cc2t1/Corrigir.java</file>
+            <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/src/cc2t1/LA.g4</file>
+            <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/src/cc2t1/LALexer.java</file>
+            <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/src/cc2t1/Gerador.java</file>
+            <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/src/cc2t1/Corrigir.java</file>
         </group>
     </open-files>
 </project-private>

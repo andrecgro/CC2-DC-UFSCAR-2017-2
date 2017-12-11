@@ -1,4 +1,10 @@
-grammar LA;
+ grammar LA;
+
+@members{
+    private void corte(String string){
+        throw new ParseCancellationException(string);
+    }
+}
 
 programa: declaracoes 'algoritmo' corpo 'fim_algoritmo' ;
 
@@ -10,9 +16,9 @@ declaracao_local: 'declare' variavel
  | 'constante' IDENT ':' tipo_basico '=' valor_constante
  | tipo IDENT ':' tipo ;
 
-variavel: IDENT dimensao mais_var ':' tipo;
+variavel: IDENT dimensao (mais_var)? ':' tipo;
 
-mais_var: (',' IDENT dimensao mais_var)?;
+mais_var: ',' IDENT dimensao (mais_var)?;
 
 identificador: ponteiros_opcionais IDENT dimensao outros_ident;
 
@@ -24,7 +30,7 @@ dimensao: ('[' exp_aritmetica ']' dimensao)?;
 
 tipo: registro | tipo_estendido;
 
-mais_ident: (',' identificador mais_ident)?;
+mais_ident: ',' identificador (mais_ident)?;
 
 mais_variaveis: (variavel mais_variaveis)?;
 
@@ -38,12 +44,12 @@ valor_constante: CADEIA | NUM_INT | NUM_REAL | 'verdadeiro' | 'falso';
 
 registro: 'registro' variavel mais_variaveis 'fim_registro';
 
-declaracao_global: 'procedimento' IDENT '(' parametros_opcional ')' declaracoes_locais comandos 'fim_procedimento'
- | 'funcao' IDENT '(' parametros_opcional ')' ':' tipo_estendido declaracoes_locais comandos 'fim_funcao';
+declaracao_global: 'procedimento' IDENT '(' parametros_opcional ')' declaracoes_locais comando_proc=comandos 'fim_procedimento'
+ | 'funcao' IDENT '(' parametros_opcional ')' ':' tipo_estendido declaracoes_locais comando_func=comandos 'fim_funcao';
 
 parametros_opcional: (parametro)?;
 
-parametro: var_opcional identificador mais_ident ':' tipo_estendido mais_parametros;
+parametro: var_opcional identificador (mais_ident)? ':' tipo_estendido mais_parametros;
 
 var_opcional: ('var')?;
 
@@ -55,24 +61,24 @@ corpo: declaracoes_locais comandos;
 
 comandos: (cmd comandos)?;
 
-cmd: 'leia' '(' identificador mais_ident ')'
- | 'escreva' '(' expressao mais_expressao ')'
- | 'se' expressao 'entao' comandos senao_opcional 'fim_se'
- | 'caso' exp_aritmetica 'seja' selecao senao_opcional 'fim_caso'
- | 'para' IDENT '<-' exp_aritmetica 'ate' exp_aritmetica 'faca' comandos 'fim_para'
- | 'enquanto' expressao 'faca' comandos 'fim_enquanto'
- | 'faca' comandos 'ate' expressao
- | '^' IDENT outros_ident dimensao '<-' expressao
+cmd: 'leia' '(' identificador (mais_ident)? ')'
+ | 'escreva' '(' exp_escreva=expressao (mais_expressao)? ')'
+ | 'se' exp_se=expressao 'entao' comandos senao_se=senao_opcional 'fim_se'
+ | 'caso' exp_a_caso=exp_aritmetica 'seja' selecao senao_caso=senao_opcional 'fim_caso'
+ | 'para' IDENT '<-' exp_a_para=exp_aritmetica 'ate' exp_a_ate=exp_aritmetica 'faca' comandos 'fim_para'
+ | 'enquanto' exp_enquanto=expressao 'faca' comandos 'fim_enquanto'
+ | 'faca' comandos 'ate' exp_faca=expressao
+ | '^' IDENT outros_ident dimensao '<-' exp_dimen=expressao
  | IDENT chamada_atribuicao
- | 'retorne' expressao;
+ | 'retorne' exp_retorne=expressao;
 
-mais_expressao: (',' expressao mais_expressao)?;
+mais_expressao: ',' expressao (mais_expressao)?;
 
 senao_opcional: ('senao' comandos)?;
 
 chamada_atribuicao: '(' argumentos_opcional ')' | outros_ident dimensao '<-' expressao;
 
-argumentos_opcional: (expressao mais_expressao)?;
+argumentos_opcional: expressao (mais_expressao)?;
 
 selecao: constantes ':' comandos mais_selecao;
 
@@ -80,7 +86,7 @@ mais_selecao: (selecao)?;
 
 constantes: numero_intervalo mais_constantes;
 
-mais_constantes: ',' (constantes)?;
+mais_constantes: (',' constantes)?;
 
 numero_intervalo: op_unario NUM_INT intervalo_opcional;
 
@@ -110,7 +116,7 @@ parcela_nao_unario: '&' IDENT outros_ident dimensao | CADEIA;
 
 outras_parcelas: ('%' parcela outras_parcelas)?;
 
-chamada_partes: '(' expressao mais_expressao ')' | outros_ident dimensao;
+chamada_partes: '(' expressao (mais_expressao)? ')' | outros_ident dimensao;
 
 exp_relacional: exp_aritmetica op_opcional;
 
@@ -132,9 +138,11 @@ fator_logico: op_nao parcela_logica;
 
 parcela_logica: 'verdadeiro' | 'falso' | exp_relacional;
 
-COMENTARIO: '{' ~('}')* '}' {skip();};
-
 WS:	(' ' | '\t' | '\r' | '\n') {skip();};
+
+COMENTARIO: '{' ~('\r'|'\n' |'}')* '}' {skip();};
+
+COMENTARIO_ABERTO: '{' ~('\r'|'\n' |'}')* { corte("Linha "+getLine()+": comentario nao fechado");};
 
 IDENT:  ( 'a'..'z' | '_' | 'A'..'Z') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')* ;
 
@@ -144,4 +152,4 @@ NUM_REAL: NUM_INT '.' NUM_INT ;
 
 CADEIA: '"' ~('\n')* '"';
 
-ERROR: . { throw new ParseCancellationException("Linha "+getLine()+": "+getText()+" - simbolo nao identificado"); };
+ERROR: . { corte("Linha "+getLine()+": "+getText()+" - simbolo nao identificado"); };

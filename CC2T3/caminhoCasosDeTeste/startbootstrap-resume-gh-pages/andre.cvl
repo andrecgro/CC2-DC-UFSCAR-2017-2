@@ -1,0 +1,23 @@
+#CV André Rocha
+#Atualizdo 09/12/2017
+
+curriculo:{
+    nome:"André Camargo Rocha"
+    especialidade:"Desenvolvedor Web"
+    contato:{
+        email:"andre.cgrocha@gmail.com"
+        tel:"(16)98160-1140"
+    }
+    formacoes:{
+        universidade:"Universidade Federal de São Carlos"
+        curso:"Bacharelado em Ciência da Computação"
+        periodo:"2014-2017"
+    }
+    experiencias:{
+        um:{
+            titulo:"Internship Web Developer"
+            local:"Libring Inc Technologies"
+            periodo:"09/2017 - 04/2018"
+        }
+    }
+}

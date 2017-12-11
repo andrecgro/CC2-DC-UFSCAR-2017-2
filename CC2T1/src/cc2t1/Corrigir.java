@@ -16,40 +16,50 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 public class Corrigir {
 
     // Especifique o caminho dos casos de teste.
-    // Deve haver dois subdiretorios: entrada e saida
-    private final static String CAMINHO_CASOS_TESTE = "/Users/andrecamargorocha/Documents/UFSCar/Compiladores II/CC2T1/casosDeTesteT1/1.arquivos_com_erros_sintaticos";
+    //private final static String CAMINHO_CASOS_TESTE = "/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/casosDeTesteT1/1.arquivos_com_erros_sintaticos";
+    private final static String CAMINHO_CASOS_TESTE = "/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T1/casosDeTesteT1/3.arquivos_sem_erros";
     
-    // As flags GERA e VERIFICA são de uso do professor
-    // GERA = true significa que a saída vai ser gerada, sobrescrevendo qualquer
-    // conteudo do subdiretorio saida
-    // VERIFICA = true gera a saída junto com o conteúdo da entrada, para
-    // verificação
-    // Alunos: deixem ambas como "false"
-    private final static boolean GERA = false;
-    private final static boolean VERIFICA = false;
-
-    
-    // Descomente o método abaixo para testar
-    // Obs: este é o mesmo método que será usado pelo professor na correção
-    // A nota que você obtiver aqui será usada no cálculo de sua nota do trabalho
-    
+     
     public static void main(String[] args) throws IOException, RecognitionException {
-        File diretorioCasosTeste = new File(CAMINHO_CASOS_TESTE + "/entrada");
-        File[] casosTeste = diretorioCasosTeste.listFiles();
-        int totalCasosTeste = casosTeste.length;
-        int casosTesteErrados = 0;
+        File diretorioCasosTeste = null;
+        File[] casosTeste = null;
+        File   arquivoSaida = null;
+        boolean arqUnico = false;
+        
+        try{
+            if ( args[0] != null && !"".equals(args[0]) && args[1] != null && !"".equals(args[1])){
+                casosTeste = new File[1];
+                casosTeste[0] = new File(args[0]);
+                arquivoSaida = new File(args[1]);
+                arqUnico = true;
+            }
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+            System.out.println("Sem argumentos de entrada");
+        }
+        
+        if(!arqUnico){
+            diretorioCasosTeste = new File(CAMINHO_CASOS_TESTE + "/1.entrada");
+            casosTeste = diretorioCasosTeste.listFiles();
+        }
+        
+        
         for (File casoTeste : casosTeste) {
 
             SaidaParser out = new SaidaParser();
             
-            //TabelaDeSimbolos.limparTabela();
+            
+
+            ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(casoTeste));
+            LALexer lexer = new LALexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            LAParser parser = new LAParser(tokens);
+            parser.addErrorListener(new T1ErrorListener(out));
+            
+            LAParser.ProgramaContext arvore = null;
+            
             try {
-                ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(casoTeste));
-                LALexer lexer = new LALexer(input);
-                CommonTokenStream tokens = new CommonTokenStream(lexer);
-                LAParser parser = new LAParser(tokens);
-                parser.addErrorListener(new T1ErrorListener(out));
-                parser.programa();
+                arvore = parser.programa();
              } catch (ParseCancellationException pce) {
                 if (pce.getMessage() != null) {
                    out.println(pce.getMessage());
@@ -57,69 +67,28 @@ public class Corrigir {
              }
 
             if (!out.isModificado()) {
-                out.println("Fim da analise. Sem erros sintaticos.");
-                out.println("Tabela de simbolos:");
+                //casos sem erro : Gerar código C
+                Gerador ger = new Gerador();
+                System.out.println(casoTeste.getName());
+                String codigo = ger.visitPrograma(arvore);
 
-                //TabelaDeSimbolos.imprimirTabela(out);
+                if(arqUnico){
+                    PrintWriter writer = new PrintWriter(arquivoSaida, "UTF-8");
+                    writer.print(codigo);
+                    writer.close();
+                    arqUnico = false;
+                }
                 System.err.print(out);
             } else {
-                out.println("Fim da analise. Com erros sintaticos.");
-            }
-
-            if (GERA) {
-
-                File saidaCasoTeste = new File(CAMINHO_CASOS_TESTE + "/saida/" + casoTeste.getName());
-                saidaCasoTeste.createNewFile();
-                PrintWriter pw = new PrintWriter(new FileWriter(saidaCasoTeste));
-
-                if (VERIFICA) {
-                    BufferedReader br = new BufferedReader(new FileReader(casoTeste));
-                    String linha = null;
-                    while ((linha = br.readLine()) != null) {
-                        pw.println(linha);
-                    }
-
-                    pw.println("===========================");
-                }
-
-
-                pw.print(out);
-                pw.flush();
-                pw.close();
-            } else {
-                File saidaCasoTeste = new File(CAMINHO_CASOS_TESTE + "/saida/" + casoTeste.getName());
-                FileReader fr = new FileReader(saidaCasoTeste);
-                StringReader sr = new StringReader(out.toString());
-                                
-                int charFr = -1;
-                int charSr = -1;
-                boolean passou = true;
-                while ((charFr = fr.read()) != -1 & (charSr = sr.read()) != -1) {
-                    if (charFr != charSr) {
-                        casosTesteErrados++;
-                        passou = false;
-                        break;
-                    }
-                }
-
-                if(passou) {
-                    if( (charFr == -1 && charSr != -1) ||
-                        (charFr != -1 && charSr == -1) ) {
-                        casosTesteErrados++;
-                        passou = false;
-                    }
-                }
-                if (!passou) {
-                    System.out.println((passou ? "passou" : "falhou") + " - " + casoTeste.getName());
-                    System.out.println(out.toString());
+                out.println("Fim da compilacao");
+                
+                if(arqUnico){
+                    PrintWriter writer = new PrintWriter(arquivoSaida, "UTF-8");
+                    writer.print(out);
+                    writer.close();
+                    arqUnico = false;
                 }
             }
-        }
-        if(!GERA) {
-            double nota = ((double) (totalCasosTeste - casosTesteErrados) / totalCasosTeste) * 10.0d;
-            System.err.println("Nota = " + nota);
-        } else {
-            System.err.println("Gabarito gerado: ");
         }
     }
 }
