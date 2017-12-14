@@ -29,7 +29,7 @@ public class Gerador{
     }
     
     // Checking if program file has all tokens found
-    public void fileHasKeys(File templateFile, File cvlFile, File outputFile) throws IOException{
+    public boolean fileHasKeys(File templateFile, File cvlFile, File outputFile) throws IOException{
         matchedTokens = processor.processTemplateFile(templateFile);
         
         for(Object matchedToken : matchedTokens.entrySet()){
@@ -41,14 +41,14 @@ public class Gerador{
                 resultadoGerador.put(pair.getValue(),tabela.getValor(token.substring(1,token.length()-1)));
             }
             else{
-                try {
-                    throw new Exception("Identificador "+(String) pair.getValue()+" encontrado em "+templateFile.getName()+" mas não encontrado no arquivo "+ cvlFile.getName());
-                } catch (Exception e) {
-                    Logger.getLogger(Gerador.class.getName()).log(Level.SEVERE, null, e);
-                }
+                String value = (String) pair.getValue();
+                value = value.substring(1,value.length()-1);
+                System.out.println("Identificador "+value+" encontrado em "+templateFile.getName()+" mas não encontrado no arquivo "+ cvlFile.getName());
+                return false;
             }
         }
         processor.replaceTags(templateFile, outputFile, resultadoGerador);
+        return true;
     }
     
     

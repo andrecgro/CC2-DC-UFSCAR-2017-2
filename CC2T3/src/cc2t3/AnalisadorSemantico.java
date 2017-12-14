@@ -35,11 +35,8 @@ public class AnalisadorSemantico extends CVLBaseVisitor{
                     tabela.adicionarSimbolo(valor[0], valor[1]);
                 }
                 else{
-                    try {
-                        throw new Exception("Identificador "+valor[0]+" já declarado no escopo.");
-                    } catch (Exception ex) {
-                        Logger.getLogger(AnalisadorSemantico.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    System.out.println("Identificador "+valor[0]+" já declarado no escopo.");
+                    return "";
                 }
             }
             return tabela;
