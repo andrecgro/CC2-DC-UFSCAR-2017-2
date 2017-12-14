@@ -41,6 +41,9 @@ h2 {
   margin-top: -1rem;
   margin-bottom: 2rem;
 }
+.nav-item p{
+  color:white;
+}
 
 .line-separator{
   height:1px; 
