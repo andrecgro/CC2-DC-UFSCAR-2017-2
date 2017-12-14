@@ -1,0 +1,39 @@
+Receita de %receita.nome%
+
+Tempo de preparo: %receita.tempoDePreparo%
+Rendimento: %receita.rendimento%
+
+Ingredientes:
+
+Ingredientes para preparo da Massa:
+
+%receita.ingredientes.massa.um.quantidade% de %receita.ingredientes.massa.um.nome%
+%receita.ingredientes.massa.dois.quantidade% %receita.ingredientes.massa.dois.nome%
+%receita.ingredientes.massa.tres.quantidade% %receita.ingredientes.massa.tres.nome%
+%receita.ingredientes.massa.quatro.quantidade% de %receita.ingredientes.massa.quatro.nome%
+%receita.ingredientes.massa.cinco.quantidade% de %receita.ingredientes.massa.cinco.nome%
+%receita.ingredientes.massa.seis.quantidade% de %receita.ingredientes.massa.seis.nome%
+
+
+Ingredientes para preparo da Cobertura:
+
+%receita.ingredientes.cobertura.um.quantidade% de %receita.ingredientes.cobertura.um.nome%
+%receita.ingredientes.cobertura.dois.quantidade% de %receita.ingredientes.cobertura.dois.nome%
+%receita.ingredientes.cobertura.tres.quantidade% de %receita.ingredientes.cobertura.tres.nome%
+%receita.ingredientes.cobertura.quatro.quantidade% de %receita.ingredientes.cobertura.quatro.nome%
+
+Modo de Preparo:
+
+Modo de preparo da Massa:
+
+%receita.preparo.massa.passo.um%
+%receita.preparo.massa.passo.dois%
+%receita.preparo.massa.passo.tres%
+%receita.preparo.massa.passo.quatro%
+%receita.preparo.massa.passo.cinco%
+
+
+Modo de preparo da Cobertura:
+
+%receita.preparo.cobertura.passo.um%
+%receita.preparo.cobertura.passo.dois%

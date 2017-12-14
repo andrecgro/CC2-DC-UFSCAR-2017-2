@@ -1,0 +1,70 @@
+#Receita de Bolo de Cenoura
+
+receita:{
+    nome: "Bolo de Cenoura"
+    tempoDePreparo: "40 minutos"
+    rendimento: "8 porções"
+    ingredientes:{
+        massa:{
+            um:{
+                nome: "Óleo"
+                quantidade: "1/2 xícara (chá)"
+            }
+            dois:{
+                nome: "Cenouras médias raladas"
+                quantidade: "3"
+            }
+            tres:{
+                nome: "Ovos"
+                quantidade: "4"
+            }
+            quatro:{
+                nome: "Açucar"
+                quantidade: "2 xícaras (chá)"
+            }
+            cinco:{
+                nome: "Farinha de Trigo"
+                quantidade: "2 xícaras (chá) e 1/2"
+            }
+            seis:{
+                nome: "Fermento em pó"
+                quantidade: "1 colher (sopa)"
+            }
+        }
+        cobertura:{
+            um:{
+                nome: "Manteiga"
+                quantidade: "1 colher (sopa)"
+            }
+            dois:{
+                nome: "Chocolate em pó"
+                quantidade: "3 colheres (sopa)"
+            }
+            tres:{
+                nome: "Açúcar"
+                quantidade: "1 xícara (chá)"
+            }
+            quatro:{
+                nome: "Leite"
+                quantidade: "1 xícara (Chá)"
+            }
+        }
+    }
+    preparo:{
+        massa:{
+            passo:{
+                um:"Em um liquidificador, adicione a cenoura, os ovos e o óleo, depois misture"
+                dois:"Acrescente o açúcar e bata novamente por 5 minutos"
+                tres:"Em uma tigela ou na batedeira, adicione a farinha de trigo e depois misture novamente"
+                quatro:"Acrescente o fermento e misture lentamente com uma colher"
+                cinco:"Asse em um forno preaquecido a 180° C por aproximadamente 40 minutos"
+            }
+        }
+        cobertura:{
+            passo:{
+                um: "Despeje em uma tigela a manteiga, o chocolate em pó, o açúcar e o leite, depois misture"
+                dois: "Leve a mistura ao fogo e continue misturando até obter uma consistência cremosa, depois despeje a calda por cima do bolo"
+            }
+        }
+    }
+}

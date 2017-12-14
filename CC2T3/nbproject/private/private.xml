@@ -5,10 +5,9 @@
         <group>
             <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T3/src/cc2t3/TemplateProcessor.java</file>
             <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T3/src/cc2t3/CVL.g4</file>
-            <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T3/src/cc2t3/CVLLexer.java</file>
             <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T3/src/cc2t3/Gerador.java</file>
             <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T3/src/cc2t3/Corrigir.java</file>
-            <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T3/src/cc2t3/CVLParser.java</file>
+            <file>file:/Users/andrecamargorocha/Documents/UFSCar/Compiladores2/CC2T3/src/cc2t3/AnalisadorSemantico.java</file>
         </group>
     </open-files>
 </project-private>
